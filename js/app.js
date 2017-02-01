@@ -57,4 +57,46 @@
   };
 
   // ADD YOUR CODE HERE
+  let search = document.getElementById('search');
+  let formTag = document.getElementsByTagName('form')[0];
+  formTag.addEventListener('submit', function(event){
+    event.preventDefault();
+    // console.log(formTag);
+    let result = search.value
+    // console.log(result);
+    let response = getOMDB(result);
+    console.log(response);
+  });
+
+  function getOMDB(title){
+    let url = `http://www.omdbapi.com/?s=${title}` //movie title
+    return fetch(url)
+    .then(function(response){
+      // console.log(response);
+      return response.json();
+    })
+    .then(function(jsonResponse){
+      // console.log(jsonResponse);
+      for (let i = 0; i < movies.length; i++) {
+        console.log("spliced?");
+        movies.splice(0,1);  //no idea why spliced worked and not pop
+        // console.log(movies);
+      }
+      // console.log(movies, "movies");
+      let arrayofMovies = jsonResponse.Search;
+      console.log(arrayofMovies);
+      for (let i = 0; i < arrayofMovies.length; i++) {
+        // console.log(movies);
+        movies.push({
+          id: arrayofMovies[i]['imdbID'],
+          poster: arrayofMovies[i]['Poster'],
+          title: arrayofMovies[i]['Title'],
+          year: arrayofMovies[i]['Year']
+        });
+        // console.log(movies);
+      }
+      renderMovies();
+    })
+  }
+
 })();
